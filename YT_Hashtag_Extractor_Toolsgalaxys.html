@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YouTube Hashtag Extractor – Toolsgalaxys</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(145deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      transition: background 0.3s, color 0.3s;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 1s ease-in-out;
+    }
+    h1 {
+      text-align: center;
+      font-size: 26px;
+      margin-bottom: 20px;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #00e5ff;
+      border: none;
+      border-radius: 10px;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,229,255,0.5);
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    .results {
+      margin-top: 20px;
+    }
+    .tag {
+      display: inline-block;
+      margin: 6px 5px;
+      padding: 8px 12px;
+      background: #1f1f1f;
+      border-radius: 20px;
+      font-size: 14px;
+      cursor: pointer;
+      border: 1px solid #00e5ff;
+    }
+    .toggle {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: #00e5ff;
+      color: #000;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .light {
+      background: #f0f0f0;
+      color: #000;
+    }
+    .light .container {
+      background: #fff;
+      color: #000;
+    }
+    .light .tag {
+      background: #eee;
+      border-color: #00e5ff;
+      color: #000;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="toggle" onclick="toggleTheme()">Light Mode</div>
+  <div class="container">
+    <h1>YouTube Hashtag Extractor</h1>
+    <input type="text" id="videoURL" placeholder="Paste YouTube video link..." />
+    <button onclick="extractHashtags()">Extract Hashtags</button>
+    <div class="results" id="results"></div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+      document.querySelector(".toggle").innerText = 
+        document.body.classList.contains("light") ? "Dark Mode" : "Light Mode";
+    }
+
+    function extractHashtags() {
+      const url = document.getElementById("videoURL").value;
+      const results = document.getElementById("results");
+      results.innerHTML = "";
+
+      if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
+        results.innerHTML = "<p>Please enter a valid YouTube link.</p>";
+        return;
+      }
+
+      // Simulated hashtags (replace with actual fetch in real version)
+      const hashtags = ["#funny", "#youtube", "#viral", "#trending", "#shorts", "#music", "#entertainment"];
+      hashtags.forEach(tag => {
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.innerText = tag;
+        span.onclick = () => {
+          navigator.clipboard.writeText(tag);
+          span.innerText = tag + " ✅";
+        };
+        results.appendChild(span);
+      });
+    }
+  </script>
+</body>
+</html>
