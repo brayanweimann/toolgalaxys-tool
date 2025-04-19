@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EMI & Installment Calculator – Toolsgalaxys</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #111;
+      color: #fff;
+      transition: background 0.3s, color 0.3s;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    h1 {
+      text-align: center;
+      font-size: 24px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 8px;
+    }
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #00bcd4;
+      color: #fff;
+      border: none;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .results {
+      margin-top: 20px;
+      font-size: 16px;
+      background: #222;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .toggle-dark {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 6px 12px;
+      background: #fff;
+      color: #000;
+      border-radius: 20px;
+      border: none;
+    }
+    body.light {
+      background-color: #f9f9f9;
+      color: #000;
+    }
+    body.light .container {
+      background: #fff;
+    }
+    body.light .results {
+      background: #eee;
+    }
+    body.light .toggle-dark {
+      background: #000;
+      color: #fff;
+    }
+  </style>
+</head>
+<body class="dark">
+  <button class="toggle-dark" onclick="toggleTheme()">Light Mode</button>
+  <div class="container">
+    <h1>EMI & Installment Calculator</h1>
+    <label>Loan Amount</label>
+    <input type="number" id="amount" placeholder="Enter amount" />
+
+    <label>Currency</label>
+    <select id="currency">
+      <option value="₹">₹ INR</option>
+      <option value="$">$ USD</option>
+      <option value="£">£ GBP</option>
+      <option value="AED">AED Dirham</option>
+    </select>
+
+    <label>Interest Rate (%)</label>
+    <input type="number" id="interest" placeholder="Enter interest rate" />
+
+    <label>Loan Tenure (months)</label>
+    <input type="number" id="tenure" placeholder="Enter number of months" />
+
+    <label>Include Interest?</label>
+    <select id="withInterest">
+      <option value="yes">Yes</option>
+      <option value="no">No (Zero Interest)</option>
+    </select>
+
+    <button onclick="calculateEMI()">Calculate EMI</button>
+
+    <div class="results" id="results"></div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+      const btn = document.querySelector(".toggle-dark");
+      btn.textContent = document.body.classList.contains("light") ? "Dark Mode" : "Light Mode";
+    }
+
+    function calculateEMI() {
+      let amount = parseFloat(document.getElementById("amount").value);
+      let interest = parseFloat(document.getElementById("interest").value);
+      let months = parseInt(document.getElementById("tenure").value);
+      let currency = document.getElementById("currency").value;
+      let withInterest = document.getElementById("withInterest").value;
+
+      let monthlyEMI = 0;
+      let totalPayment = 0;
+      let totalInterest = 0;
+
+      if (withInterest === "yes") {
+        let monthlyRate = interest / 12 / 100;
+        monthlyEMI = (amount * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+        totalPayment = monthlyEMI * months;
+        totalInterest = totalPayment - amount;
+      } else {
+        monthlyEMI = amount / months;
+        totalPayment = amount;
+        totalInterest = 0;
+      }
+
+      document.getElementById("results").innerHTML = `
+        <strong>Monthly EMI:</strong> ${currency} ${monthlyEMI.toFixed(2)}<br/>
+        <strong>Total Payment:</strong> ${currency} ${totalPayment.toFixed(2)}<br/>
+        <strong>Total Interest:</strong> ${currency} ${totalInterest.toFixed(2)}
+      `;
+    }
+  </script>
+</body>
+</html>
