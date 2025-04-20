@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YouTube Hashtag Extractor - Toolsgalaxys</title>
+  <meta name="description" content="Extract real hashtags from any YouTube video URL. 100% accurate hashtag extractor tool with dark mode, animation, and mobile-friendly UI."/>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #111;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      color: #00BFFF;
+      margin-bottom: 10px;
+    }
+    .container {
+      max-width: 500px;
+      width: 100%;
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 191, 255, 0.2);
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 6px;
+    }
+    button {
+      background: #00BFFF;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #009acd;
+    }
+    .results {
+      margin-top: 20px;
+      background: #333;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .hashtag {
+      display: inline-block;
+      background: #444;
+      color: #00BFFF;
+      padding: 5px 10px;
+      margin: 5px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 YouTube Hashtag Extractor</h1>
+  <div class="container">
+    <input type="text" id="videoUrl" placeholder="Paste YouTube Video URL here">
+    <button onclick="extractHashtags()">Extract Hashtags</button>
+    <div id="output" class="results" style="display:none;"></div>
+  </div>
+
+  <script>
+    async function extractHashtags() {
+      const url = document.getElementById('videoUrl').value;
+      const videoId = url.match(/(?:v=|\.be\/|embed\/)([\w-]{11})/);
+      const output = document.getElementById('output');
+      output.innerHTML = "";
+      output.style.display = "none";
+
+      if (!videoId || !videoId[1]) {
+        output.style.display = "block";
+        output.innerHTML = "<span style='color: red;'>Invalid YouTube URL</span>";
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://www.youtube.com/watch?v=${videoId[1]}`);
+        const text = await response.text();
+        const matches = text.match(/#[\w]+/g);
+        const uniqueTags = [...new Set(matches)];
+
+        if (uniqueTags.length === 0) {
+          output.style.display = "block";
+          output.innerHTML = "No hashtags found!";
+          return;
+        }
+
+        output.style.display = "block";
+        uniqueTags.forEach(tag => {
+          const span = document.createElement('span');
+          span.className = 'hashtag';
+          span.textContent = tag;
+          output.appendChild(span);
+        });
+      } catch (err) {
+        output.style.display = "block";
+        output.innerHTML = "<span style='color: red;'>Failed to extract hashtags.</span>";
+      }
+    }
+  </script>
+</body>
+</html>
