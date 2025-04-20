@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated QR Generator | ToolsGalaxys.com</title>
+    <style>
+        /* Cosmic Gradient Background */
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 3D Tool Card with Glass Morphism */
+        .tool {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
+            transition: transform 0.5s, box-shadow 0.5s;
+        }
+        .tool:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Pulsing Neon Button */
+        .btn {
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            border: none;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.4);
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px #6a11cb; }
+            50% { box-shadow: 0 0 25px #2575fc; }
+            100% { box-shadow: 0 0 10px #6a11cb; }
+        }
+        .btn:hover {
+            animation: none;
+            transform: scale(1.05);
+            box-shadow: 0 0 30px #2575fc;
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Input Styling */
+        input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(106, 17, 203, 0.5);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            width: 80%;
+            margin: 15px 0;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #6a11cb;
+            box-shadow: 0 0 10px rgba(106, 17, 203, 0.5);
+        }
+
+        /* QR Result Animation */
+        #qr-result {
+            margin: 20px 0;
+            transition: all 0.5s;
+        }
+        #qr-result img {
+            border: 2px solid #00f2fe;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .tool {
+                width: 90%;
+                padding: 20px;
+                margin: 15px auto;
+            }
+            input {
+                width: 90%;
+            }
+            .btn {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+            /* Reduce particles on mobile */
+            .particle:nth-child(n+15) { display: none; }
+        }
+
+        /* Low-end device optimization */
+        @media (max-width: 480px) {
+            .particle { display: none; }
+            .tool:hover { transform: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Particles -->
+    <script>
+        // Create 30 floating particles
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.top = `${Math.random() * 100}vh`;
+            particle.style.width = `${Math.random() * 5 + 2}px`;
+            particle.style.height = particle.style.width;
+            particle.style.opacity = Math.random();
+            particle.style.animationDelay = `${Math.random() * 10}s`;
+            document.body.appendChild(particle);
+        }
+    </script>
+
+    <!-- QR Code Tool -->
+    <div class="tool">
+        <h2 style="text-shadow: 0 0 10px rgba(106, 17, 203, 0.7);">✨ QR Code Generator</h2>
+        <input type="text" id="qr-input" placeholder="Enter URL or text...">
+        <button class="btn" onclick="generateQR()">Generate QR Code</button>
+        <div id="qr-result"></div>
+    </div>
+
+    <script>
+        function generateQR() {
+            const input = document.getElementById('qr-input').value;
+            if (!input) {
+                // Error shake animation
+                document.getElementById('qr-input').style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    document.getElementById('qr-input').style.animation = '';
+                }, 500);
+                return;
+            }
+
+            // Show loading state
+            const resultDiv = document.getElementById('qr-result');
+            resultDiv.innerHTML = '<p style="color: #00f2fe;">Generating... ⚡</p>';
+
+            // Generate QR after short delay (for animation)
+            setTimeout(() => {
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(input)}`;
+                resultDiv.innerHTML = `
+                    <img src="${qrUrl}" alt="QR Code">
+                    <p style="color: #4facfe; margin-top: 10px;">Right-click to save image!</p>
+                `;
+                
+                // Success animation
+                resultDiv.style.animation = 'none';
+                void resultDiv.offsetWidth; // Trigger reflow
+                resultDiv.style.animation = 'popIn 0.6s';
+            }, 800);
+        }
+
+        // Shake animation for errors
+        const style = document.createElement('style');
+        style.innerHTML = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                20%, 60% { transform: translateX(-5px); }
+                40%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
