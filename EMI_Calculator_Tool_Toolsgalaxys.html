@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Calculate EMI with or without interest. Multi-currency, animated UI, AdSense friendly.">
+  <meta name="keywords" content="EMI calculator, interest calculator, loan tool, Toolsgalaxys, installment calculator">
+  <meta name="author" content="Toolsgalaxys">
+  <title>EMI & Installment Calculator – Toolsgalaxys</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      transition: background 0.3s ease;
+    }
+    .container {
+      background: #1e1e1e;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      max-width: 400px;
+      width: 100%;
+      animation: fadeIn 1s ease;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: scale(0.95);}
+      to {opacity: 1; transform: scale(1);}
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #2e2e2e;
+      color: white;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #4e8cff, #6c63ff);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(78, 140, 255, 0.5);
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108, 99, 255, 0.7);
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      text-align: center;
+    }
+    .toggle-mode {
+      margin-top: 25px;
+      text-align: center;
+    }
+    .toggle-mode button {
+      background: #444;
+      margin: 5px;
+      padding: 8px 14px;
+      font-size: 14px;
+    }
+    .light-mode {
+      background-color: #f5f5f5;
+      color: #000;
+    }
+    .light-mode .container {
+      background: #ffffff;
+      color: #000;
+    }
+    .light-mode input, .light-mode select {
+      background: #f0f0f0;
+      color: #000;
+    }
+    .light-mode button {
+      background: linear-gradient(135deg, #6c63ff, #4e8cff);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>💰 EMI Calculator</h2>
+    <label for="amount">Loan Amount (₹)</label>
+    <input type="number" id="amount" placeholder="e.g. 500000" />
+
+    <label for="rate">Interest Rate (% per annum)</label>
+    <input type="number" id="rate" placeholder="e.g. 8" />
+
+    <label for="tenure">Loan Tenure (Years)</label>
+    <input type="number" id="tenure" placeholder="e.g. 5" />
+
+    <label for="interestToggle">Include Interest?</label>
+    <select id="interestToggle">
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+
+    <button onclick="calculateEMI()">Calculate EMI</button>
+
+    <div id="result"></div>
+
+    <div class="toggle-mode">
+      <button onclick="setMode('dark')">🌙 Dark Mode</button>
+      <button onclick="setMode('light')">🌞 Light Mode</button>
+    </div>
+  </div>
+
+  <script>
+    function calculateEMI() {
+      const principal = parseFloat(document.getElementById("amount").value);
+      const rate = parseFloat(document.getElementById("rate").value);
+      const years = parseFloat(document.getElementById("tenure").value);
+      const includeInterest = document.getElementById("interestToggle").value === "yes";
+
+      if (isNaN(principal) || isNaN(rate) || isNaN(years)) {
+        document.getElementById("result").innerText = "Please fill in all fields correctly.";
+        return;
+      }
+
+      const months = years * 12;
+      let emi;
+
+      if (includeInterest) {
+        const monthlyRate = rate / 12 / 100;
+        emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+      } else {
+        emi = principal / months;
+      }
+
+      document.getElementById("result").innerText = `Your Monthly EMI is ₹${emi.toFixed(2)}`;
+    }
+
+    function setMode(mode) {
+      if (mode === 'light') {
+        document.body.classList.add("light-mode");
+      } else {
+        document.body.classList.remove("light-mode");
+      }
+    }
+
+    // Set default mode
+    setMode("dark");
+  </script>
+</body>
+</html>
