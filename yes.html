@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="EMI & Installment Calculator – With & Without Interest | Multi-country currency support"/>
+  <title>EMI & Installment Calculator – With & Without Interest</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      background: #1e2a38;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    }
+    h2 {
+      text-align: center;
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      background: #111;
+      color: #fff;
+    }
+    .toggle-buttons {
+      display: flex;
+      margin: 10px 0;
+      justify-content: space-between;
+    }
+    .toggle-buttons button {
+      flex: 1;
+      padding: 10px;
+      margin: 0 5px;
+      background: #00bcd4;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .toggle-buttons button.active {
+      background: #000;
+      color: #00ffff;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background: #000;
+      border-radius: 10px;
+      color: #0f0;
+      text-align: center;
+    }
+    .calculate-btn {
+      background: #00bcd4;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    option {
+      background: #333;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📊 EMI & Installment Calculator</h2>
+    <label>Loan Amount</label>
+    <input type="number" id="loanAmount" placeholder="Enter Loan Amount" />
+
+    <label>Interest Rate (% per annum)</label>
+    <input type="number" id="interestRate" placeholder="e.g. 8.5" />
+
+    <div class="toggle-buttons">
+      <button onclick="toggleMode(true)" id="withBtn" class="active">With Interest</button>
+      <button onclick="toggleMode(false)" id="withoutBtn">Without Interest</button>
+    </div>
+
+    <label>Loan Duration</label>
+    <input type="number" id="years" placeholder="Years" />
+    <input type="number" id="months" placeholder="Months" />
+
+    <label>Select Country</label>
+    <select id="country">
+      <option value="USD">🇺🇸 United States</option>
+      <option value="INR">🇮🇳 India</option>
+      <option value="PKR">🇵🇰 Pakistan</option>
+      <option value="BDT">🇧🇩 Bangladesh</option>
+      <option value="AED">🇦🇪 United Arab Emirates</option>
+      <option value="GBP">🇬🇧 United Kingdom</option>
+      <option value="EUR">🇪🇺 France</option>
+      <option value="EUR">🇩🇪 Germany</option>
+      <option value="EUR">🇪🇸 Spain</option>
+      <option value="EUR">🇮🇹 Italy</option>
+      <option value="EUR">🇳🇱 Netherlands</option>
+      <option value="EUR">🇧🇪 Belgium</option>
+      <option value="EUR">🇸🇪 Sweden</option>
+      <option value="EUR">🇳🇴 Norway</option>
+      <option value="EUR">🇨🇭 Switzerland</option>
+      <option value="EUR">🇵🇹 Portugal</option>
+      <option value="EUR">🇩🇰 Denmark</option>
+      <option value="EUR">🇦🇹 Austria</option>
+    </select>
+
+    <button class="calculate-btn" onclick="calculateEMI()">Calculate</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    let withInterest = true;
+
+    function toggleMode(mode) {
+      withInterest = mode;
+      document.getElementById("interestRate").style.display = mode ? "block" : "none";
+      document.getElementById("withBtn").classList.toggle("active", mode);
+      document.getElementById("withoutBtn").classList.toggle("active", !mode);
+    }
+
+    function calculateEMI() {
+      const loan = parseFloat(document.getElementById("loanAmount").value);
+      const rate = parseFloat(document.getElementById("interestRate").value);
+      const years = parseInt(document.getElementById("years").value) || 0;
+      const months = parseInt(document.getElementById("months").value) || 0;
+      const totalMonths = years * 12 + months;
+      const currency = document.getElementById("country").value;
+      const resultBox = document.getElementById("result");
+
+      if (!loan || totalMonths <= 0) {
+        resultBox.innerHTML = "Please enter a valid loan and duration.";
+        return;
+      }
+
+      let emi;
+
+      if (withInterest && rate) {
+        const monthlyRate = rate / 12 / 100;
+        emi = (loan * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+      } else {
+        emi = loan / totalMonths;
+      }
+
+      resultBox.innerHTML = `Monthly EMI: <strong>${currency} ${emi.toFixed(2)}</strong>`;
+    }
+  </script>
+</body>
+</html>
